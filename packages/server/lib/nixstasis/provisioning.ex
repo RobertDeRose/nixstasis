@@ -1,9 +1,9 @@
 defmodule Nixstasis.Provisioning do
   @moduledoc """
-  Delivers one complete first-boot AtomixOS artifact through the authorized FRP route.
+  Delivers one complete first-boot provisioning artifact through the authorized FRP route.
 
   The action never unpacks or mutates an artifact locally. It owns operator
-  authorization, the leased `atomixos-bootstrap` route, bounded submission and
+  authorization, the leased `device-bootstrap` route, bounded submission and
   polling, durable delivery state, and lease withdrawal after a terminal result.
   """
 
@@ -23,7 +23,7 @@ defmodule Nixstasis.Provisioning do
   alias NixstasisWeb.Permissions
 
   @name __MODULE__
-  @route_profile "atomixos-bootstrap"
+  @route_profile "device-bootstrap"
   @default_base_domain "example.com"
   @default_readiness_timeout_ms 60_000
   @default_readiness_interval_ms 500
@@ -342,7 +342,7 @@ defmodule Nixstasis.Provisioning do
           state,
           delivery,
           actor_id,
-          "ambiguous AtomixOS HTTP #{status}: response exceeded #{max_bytes}-byte receive limit"
+          "ambiguous provisioning service HTTP #{status}: response exceeded #{max_bytes}-byte receive limit"
         )
 
       {:error, {:response_too_large, status, max_bytes}} ->
@@ -350,14 +350,14 @@ defmodule Nixstasis.Provisioning do
           state,
           delivery,
           actor_id,
-          "AtomixOS HTTP #{status} response exceeded #{max_bytes}-byte receive limit"
+          "provisioning service HTTP #{status} response exceeded #{max_bytes}-byte receive limit"
         )
 
       {:error, {:http, 409, message}} ->
-        finish_failed(state, delivery, actor_id, "AtomixOS rejected the submission: #{message}")
+        finish_failed(state, delivery, actor_id, "provisioning service rejected the submission: #{message}")
 
       {:error, {:http, status, message}} when status >= 500 ->
-        finish_indeterminate(state, delivery, actor_id, "ambiguous AtomixOS HTTP #{status}: #{message}")
+        finish_indeterminate(state, delivery, actor_id, "ambiguous provisioning service HTTP #{status}: #{message}")
 
       {:error, {:transport, reason}} ->
         finish_indeterminate(state, delivery, actor_id, "ambiguous upload transport error: #{inspect(reason)}")
@@ -469,7 +469,7 @@ defmodule Nixstasis.Provisioning do
                 end
 
               _ ->
-                finish_indeterminate(state, delivery, actor_id, "AtomixOS returned an unknown job state")
+                finish_indeterminate(state, delivery, actor_id, "provisioning service returned an unknown job state")
             end
 
           {:error, reason} ->
@@ -477,14 +477,14 @@ defmodule Nixstasis.Provisioning do
         end
 
       {:error, {:http, 404, message}} ->
-        finish_failed(state, delivery, actor_id, "AtomixOS job was not found: #{message}")
+        finish_failed(state, delivery, actor_id, "provisioning job was not found: #{message}")
 
       {:error, {:response_too_large, 404, max_bytes}} ->
         finish_failed(
           state,
           delivery,
           actor_id,
-          "AtomixOS job was not found: response exceeded #{max_bytes}-byte receive limit"
+          "provisioning job was not found: response exceeded #{max_bytes}-byte receive limit"
         )
 
       {:error, reason} ->
@@ -586,7 +586,7 @@ defmodule Nixstasis.Provisioning do
           state,
           delivery,
           actor_id,
-          "AtomixOS returned invalid result.reapply value: #{inspect(value)}"
+          "provisioning service returned invalid result.reapply value: #{inspect(value)}"
         )
     end
   end
@@ -775,8 +775,10 @@ defmodule Nixstasis.Provisioning do
     }
   end
 
-  defp submission_error(payload), do: value(payload, "error", :error) || "AtomixOS reported a failed submission"
-  defp job_error(job), do: job.error || "AtomixOS reported a failed provisioning job"
+  defp submission_error(payload),
+    do: value(payload, "error", :error) || "provisioning service reported a failed submission"
+
+  defp job_error(job), do: job.error || "provisioning service reported a failed provisioning job"
 
   defp resolve_job_url(base_url, job_url, job_id) when is_binary(job_url) do
     uri = URI.parse(job_url)

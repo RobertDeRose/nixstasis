@@ -32,7 +32,7 @@ and `frpc`'s admin API listens only on loopback.
 - **Terminals:** Phoenix opens SSH through the TCP mux with `ncat --proxy-type http`, finding the mux host through
   `NIXSTASIS_SSH_FRP_HOST`. SSH and PCP routes exist only while remote access is active; the Device page's PCP chart
   uses heartbeat telemetry instead of a live socket.
-- **Provisioning:** an AtomixOS bootstrap first sends a read-only `HEAD /api/config` through the device host, which
+- **Provisioning:** a device bootstrap first sends a read-only `HEAD /api/config` through the device host, which
   gives the device time to receive its lease on the next heartbeat (every 30 seconds with the packaged config, or 10 seconds when `poll.interval` is unset) and start `frpc` before any
   change. See [Server Provisioning](server-provisioning.md).
 - The client side, including route profiles and how `frpc` is started, is described in

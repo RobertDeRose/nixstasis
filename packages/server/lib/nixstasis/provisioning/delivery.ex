@@ -1,6 +1,6 @@
 defmodule Nixstasis.Provisioning.Delivery do
   @moduledoc """
-  Durable record of one AtomixOS bootstrap artifact delivery attempt.
+  Durable record of one device bootstrap artifact delivery attempt.
   """
 
   use Ash.Resource,

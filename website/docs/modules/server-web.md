@@ -19,7 +19,7 @@ layer. The data layer's own access rules are in [Server Domain](server-domain.md
 |------------------------|-----------------|------------------------------------------------------------------------------------------------------------------|
 | `/`                    | `:browser`      | Operator LiveViews: dashboard, devices, alerts and alert rules, reports, scripts and command policies, settings. |
 | `/api/v1`              | `:api`          | The device protocol used by the client, report results, and Caddy's `check_domain`.                              |
-| `/api/v1/provisioning` | `:operator_api` | AtomixOS bootstrap deliveries: create, show, and withdraw. See [Server Provisioning](server-provisioning.md).    |
+| `/api/v1/provisioning` | `:operator_api` | Device bootstrap deliveries: create, show, and withdraw. See [Server Provisioning](server-provisioning.md).      |
 | `/api/json`            | `:json_api`     | The generated Ash JSON:API and Swagger UI.                                                                       |
 | `/internal/frp`        | `:frp_plugin`   | FRPS plugin callbacks that authorize tunnels and HTTP access. See [Gateway FRP](gateway-frp.md).                 |
 | `/e2e`                 | `:e2e_api`      | The E2E run API. See [Server E2E](../development/e2e/server.md).                                                 |

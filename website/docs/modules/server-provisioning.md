@@ -1,8 +1,10 @@
 # Server Provisioning
 
-`Nixstasis.Provisioning` gives a freshly installed AtomixOS device its first configuration. An operator uploads one
-artifact, and the server passes those exact bytes to AtomixOS over the device's `atomixos-bootstrap` FRP route. The
-server never writes to the device's filesystem or unpacks the artifact; AtomixOS does all of that itself.
+`Nixstasis.Provisioning` gives a freshly installed device its first configuration. An operator uploads one
+artifact, and the server passes those exact bytes to the device's provisioning service over the device's `device-bootstrap` FRP route. The
+server never writes to the device's filesystem or unpacks the artifact; the provisioning service does all of that itself.
+[AtomixOS](https://github.com/RobertDeRose/atomixos) ships a compatible provisioning service and is the recommended OS
+for Nixstasis devices.
 
 ## Owns
 
@@ -26,13 +28,13 @@ remote-access permission for the target device.
 ### How an upload runs
 
 1. The server checks permission before reading the request body. The device must be approved and online.
-2. It opens a lease with the `atomixos-bootstrap` profile. On its next heartbeat the device exposes its local
+2. It opens a lease with the `device-bootstrap` profile. On its next heartbeat the device exposes its local
    `127.0.0.1:8080` HTTP service through that route, rewriting the `Host` header to `localhost`. The route itself is
    defined on the device, not by the server.
 3. The server sends `HEAD /api/config` through the route until it gets a 2xx, or the 405 that endpoint normally
    returns. This gives the device time to pick up the lease, since heartbeats arrive every 30 seconds with the packaged config, or every 10 seconds when `poll.interval` is unset. Each
    probe times out after 30 seconds, and the server gives up after 60 seconds in total.
-4. It posts the artifact and then polls the AtomixOS job until it finishes, as described below.
+4. It posts the artifact and then polls the provisioning job until it finishes, as described below.
 
 ## Boundaries
 
@@ -56,19 +58,19 @@ The artifact must be non-empty and at most 32 MiB, with one of these filenames:
 
 The server records the size and the lowercase SHA-256 digest, then sends the same bytes to `POST /api/config` with
 `Content-Type: application/octet-stream` and `x-config-filename`. It sends no browser `Origin` or `Referer` header.
-Checking the TOML or archive contents, and limiting decompression, is up to AtomixOS.
+Checking the TOML or archive contents, and limiting decompression, is up to the provisioning service.
 
-### Talking to AtomixOS
+### Talking to the provisioning service
 
-The server reaches AtomixOS at `https://atom-<normalized-device-uuid>-provisioning.<BASE_DOMAIN>`, the same host the
-device's bootstrap route serves. `ATOMIXOS_PROVISIONING_BASE_URL` overrides it.
+The server reaches the provisioning service at `https://atom-<normalized-device-uuid>-provisioning.<BASE_DOMAIN>`, the same host the
+device's bootstrap route serves. `NIXSTASIS_PROVISIONING_BASE_URL` overrides it.
 
-AtomixOS answers the upload with HTTP `202` and JSON containing a `job_id`, a job `state`, and a relative `job_url`
+The provisioning service answers the upload with HTTP `202` and JSON containing a `job_id`, a job `state`, and a relative `job_url`
 such as `/api/jobs/<job_id>`. The server only follows a job URL on the same host, with a short, URL-safe job ID.
 
 The server then polls `GET /api/jobs/<job_id>` until the job finishes, for up to five minutes by default. The job
 states are `submitted`, `running`, `succeeded`, and `failed`. The server keeps `current_step`, `events`, `error`,
-`result`, and `rollback_status` when AtomixOS sends them.
+`result`, and `rollback_status` when the provisioning service sends them.
 
 Every response body is capped at 1 MiB. The server stops reading as soon as a body passes that size, before decoding or
 saving anything. A `result.reapply: true` is not treated as success, because this is a first boot. `result.warnings`
@@ -76,14 +78,14 @@ and the older `result.forwarding_url` are kept for diagnosis only; the server ne
 
 ### States and retries
 
-The guiding rule is that the server never risks creating the same AtomixOS job twice.
+The guiding rule is that the server never risks creating the same provisioning job twice.
 
 | Delivery state          | Meaning                                                                   | Route lease                              |
 |-------------------------|---------------------------------------------------------------------------|------------------------------------------|
 | `submitting`            | The attempt is recorded, and the upload is not yet accepted.              | active                                   |
-| `submitted` / `running` | AtomixOS accepted the job, and the server is polling it.                  | active                                   |
+| `submitted` / `running` | The provisioning service accepted the job, and the server is polling it.  | active                                   |
 | `succeeded`             | The first boot finished and the result is recorded.                       | withdrawn                                |
-| `failed`                | AtomixOS reported failure, or the request was rejected.                   | withdrawn                                |
+| `failed`                | The provisioning service reported failure, or the request was rejected.   | withdrawn                                |
 | `indeterminate`         | A network error, a 5xx, or the polling deadline left the outcome unknown. | kept until withdrawn or until it expires |
 
 - **Only a `409` is retried**, at most twice, with a growing delay. A `202` is never sent again.
@@ -98,7 +100,7 @@ running resumes polling its job, and asking again for a finished one returns the
 attempt UUID. The server never quietly sends the same artifact again.
 
 The server records the final result before withdrawing the lease. Withdrawing can safely be repeated, is audited, and
-does not touch the AtomixOS job.
+does not touch the provisioning job.
 
 ### Auditing
 

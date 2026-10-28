@@ -1,7 +1,7 @@
 [project]
 name = "nixstasis"
 dynamic = ["version"]
-description = "Monitoring and Remote Access for AtomixOS deployments"
+description = "Self-hosted IoT fleet monitoring and remote access"
 readme = "README.md"
 requires-python = ">=3.13"
 

@@ -1,8 +1,8 @@
 defmodule Nixstasis.Provisioning.Artifact do
   @moduledoc """
-  Validates the bounded opaque artifact accepted by the AtomixOS bootstrap API.
+  Validates the bounded opaque artifact accepted by the device bootstrap API.
 
-  The server does not unpack or rewrite the artifact. AtomixOS owns TOML and
+  The server does not unpack or rewrite the artifact. The device provisioning service owns TOML and
   archive validation; Nixstasis only enforces the transport size and canonical
   filename boundary before sending the exact bytes.
   """

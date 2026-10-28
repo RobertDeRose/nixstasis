@@ -1,4 +1,4 @@
-defmodule Nixstasis.Repo.Migrations.AtomixosBootstrapProvisioning do
+defmodule Nixstasis.Repo.Migrations.DeviceBootstrapProvisioning do
   @moduledoc """
   Updates resources based on their most recent snapshots.
 

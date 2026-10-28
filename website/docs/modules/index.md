@@ -15,7 +15,7 @@ section. The end-to-end test system is covered under [E2E Testing](../developmen
 | [Server Domain](server-domain.md)             | Ash resources, data-layer authorization, and the generated JSON:API.                   |
 | [Server Web](server-web.md)                   | Routing, request pipelines, operator permissions, LiveViews, and the terminal channel. |
 | [Server Devices](server-devices.md)           | Device identity, registration, groups, the command queue, and remote-access leases.    |
-| [Server Provisioning](server-provisioning.md) | AtomixOS bootstrap delivery.                                                           |
+| [Server Provisioning](server-provisioning.md) | Device bootstrap delivery.                                                             |
 | [Server Monitoring](server-monitoring.md)     | Heartbeats, telemetry, alerts, offline detection, and notifications.                   |
 | [Server Scripts](server-scripts.md)           | The Stary script workbench.                                                            |
 | [Server Reporting](server-reporting.md)       | Custom telemetry reports.                                                              |

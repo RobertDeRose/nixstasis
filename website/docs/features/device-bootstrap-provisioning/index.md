@@ -1,11 +1,17 @@
-# AtomixOS Bootstrap Provisioning
+# Device Bootstrap Provisioning
 
-An operator can give a freshly installed, approved, online AtomixOS device its complete first configuration: a
-`config.toml` or an approved config bundle. The server opens the device's own `atomixos-bootstrap` FRP route, posts the
-file unchanged to AtomixOS's `/api/config`, follows the resulting job, records the outcome, and then closes the route.
+An operator can give a freshly installed, approved, online device its complete first configuration: a
+`config.toml` or an approved config bundle. The server opens the device's own `device-bootstrap` FRP route, posts the
+file unchanged to the provisioning service's `/api/config`, follows the resulting job, records the outcome, and then closes the route.
 
 The server never writes to the device's filesystem, unpacks archives, uses the browser-only `/apply` flow, or resends an
-upload that AtomixOS has accepted. The original plan is in the [design record](design.md).
+upload that the provisioning service has accepted. The original plan is in the [design record](design.md).
+
+## Works best with AtomixOS
+
+[AtomixOS](https://github.com/RobertDeRose/atomixos) ships the provisioning service this feature talks to, so an
+AtomixOS device supports bootstrap provisioning as soon as it is installed. That makes it the ideal OS for a Nixstasis
+fleet. Any other OS works too if it serves the same `/api/config` and job API on the device's `device-bootstrap` route.
 
 ## What changed for users
 
@@ -19,22 +25,22 @@ upload that AtomixOS has accepted. The original plan is in the [design record](d
 
 Provisioning reuses what already exists: device permissions, the online check, remote-access leases, Caddy's wildcard
 routing, the device's versioned FRP profiles, and the usual Logger and PubSub audit events. The server only picks the
-`atomixos-bootstrap` profile by name; the device decides where it points, how it serves HTTP, and the fixed `Host`
+`device-bootstrap` profile by name; the device decides where it points, how it serves HTTP, and the fixed `Host`
 rewrite.
 
 ## Running it
 
 - Files can be up to 32 MiB, and are tracked by their lowercase SHA-256.
-- Every response from AtomixOS is capped at 1 MiB while it is read, before decoding or saving.
+- Every response from the provisioning service is capped at 1 MiB while it is read, before decoding or saving.
 - The server follows a job for up to five minutes by default, and each request times out after 30 seconds.
 - Only an HTTP `409` on upload is retried, at most twice.
 - An unclear upload becomes `indeterminate`, and keeps its route open until you withdraw it or the lease expires.
-- `ATOMIXOS_PROVISIONING_BASE_URL` overrides the per-device address, which is otherwise built from `BASE_DOMAIN`.
+- `NIXSTASIS_PROVISIONING_BASE_URL` overrides the per-device address, which is otherwise built from `BASE_DOMAIN`.
 
 ## Differences from the design
 
 - **Deliveries are stored.** Each delivery is saved, so operators can see its status, and the latest job events and
-  result are kept. That is because AtomixOS reports progress through its job resource, not through a second Nixstasis
+  result are kept. That is because the provisioning service reports progress through its job resource, not through a second Nixstasis
   command.
 - **Each delivery owns its lease.** A delivery's route lease belongs to its UUID and is saved. Withdrawing, or resuming
   after a restart, uses that same lease, never a new one with a fresh expiry. Finishing or withdrawing a delivery voids

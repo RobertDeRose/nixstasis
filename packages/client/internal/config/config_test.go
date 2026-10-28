@@ -79,7 +79,7 @@ func TestGetDefaultConfigDeclaresBoundedFRPProfiles(t *testing.T) {
 	if len(profile.Routes) != 3 {
 		t.Fatalf("default FRP routes = %d, want 3", len(profile.Routes))
 	}
-	bootstrap, ok := cfg.FRP.Profiles[AtomixOSBootstrapProfileName]
+	bootstrap, ok := cfg.FRP.Profiles[DeviceBootstrapProfileName]
 	if !ok || len(bootstrap.Routes) != 1 || bootstrap.Routes[0].LocalAddr != "127.0.0.1:8080" ||
 		bootstrap.Routes[0].HostHeaderRewrite == nil || *bootstrap.Routes[0].HostHeaderRewrite != "localhost" {
 		t.Fatalf("bootstrap FRP profile = %+v", bootstrap)
@@ -94,7 +94,7 @@ func TestLoadReadsClientOwnedFRPProfiles(t *testing.T) {
 	contents := `frp:
   server_addr: "frps.example"
   profiles:
-    atomixos-bootstrap:
+    device-bootstrap:
       version: 1
       routes:
         - name: "provisioning"
@@ -111,7 +111,7 @@ func TestLoadReadsClientOwnedFRPProfiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load() error = %v", err)
 	}
-	profile, ok := cfg.FRP.Profiles["atomixos-bootstrap"]
+	profile, ok := cfg.FRP.Profiles["device-bootstrap"]
 	if !ok || len(profile.Routes) != 1 || profile.Routes[0].LocalAddr != "127.0.0.1:8080" ||
 		profile.Routes[0].HostHeaderRewrite == nil || *profile.Routes[0].HostHeaderRewrite != "localhost" {
 		t.Fatalf("loaded profiles = %+v", cfg.FRP.Profiles)

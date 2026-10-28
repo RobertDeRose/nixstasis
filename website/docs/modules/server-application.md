@@ -22,7 +22,7 @@ The supervisor starts these children in order:
 | `DNSCluster`                                             | Node discovery when a DNS cluster query is configured.                                  |
 | `Phoenix.PubSub` (`Nixstasis.PubSub`)                    | Broadcasts for LiveViews and channels.                                                  |
 | `Nixstasis.Devices` (`:remote_access_leases`)            | Holds and restores remote-access leases and expires them.                               |
-| `Nixstasis.Provisioning`                                 | Tracks AtomixOS bootstrap route leases and expires them.                                |
+| `Nixstasis.Provisioning`                                 | Tracks device bootstrap route leases and expires them.                                  |
 | `Nixstasis.Devices.SshKeyManager` (`:terminal_sessions`) | Issues ephemeral SSH keys for browser terminal sessions and expires them.               |
 | `NixstasisWeb.RateLimiterStore`                          | ETS-backed rate-limit buckets, pruned every minute.                                     |
 | `Nixstasis.Monitoring.OfflineChecker`                    | Marks devices offline when heartbeats stop.                                             |

@@ -1,6 +1,6 @@
 defmodule Nixstasis.Provisioning.Audit do
   @moduledoc """
-  Emits structured audit events for AtomixOS bootstrap delivery.
+  Emits structured audit events for device bootstrap delivery.
   """
 
   require Logger

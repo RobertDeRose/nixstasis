@@ -36,7 +36,7 @@ These specifications cover the routes served by Phoenix controllers. Each render
 Contracts in the site navigation, generated at build time; the links below download the source YAML.
 
 - [Device API](device-api.yaml): registration, heartbeat, command results, deferred command payloads, device list
-  filtering, TLS domain approval, AtomixOS bootstrap provisioning, and the `ssh_authorize` and `ssh_revoke` command
+  filtering, TLS domain approval, device bootstrap provisioning, and the `ssh_authorize` and `ssh_revoke` command
   payloads delivered by heartbeat. The client uses these `/api/v1` routes.
 - [Report API](report-api.yaml): custom report result rows.
 - [E2E API](e2e-api.yaml): runs, results, logs, and cancellation for the end-to-end test harness. Its pages are in the

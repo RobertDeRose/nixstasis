@@ -21,11 +21,11 @@ defmodule Nixstasis.Devices.RemoteAccessLeasesTest do
   test "newest lease selects its own profile and expiry and closing it restores the previous lease" do
     device = device()
     {:ok, original, first} = Devices.open_remote_access_lease(device, profile: "default", ttl_ms: 60_000)
-    {:ok, selected, second} = Devices.open_remote_access_lease(device, profile: "atomixos-bootstrap", ttl_ms: 30_000)
-    assert selected.remote_access_profile == "atomixos-bootstrap"
+    {:ok, selected, second} = Devices.open_remote_access_lease(device, profile: "device-bootstrap", ttl_ms: 30_000)
+    assert selected.remote_access_profile == "device-bootstrap"
     assert DateTime.compare(selected.remote_access_expires_at, original.remote_access_expires_at) == :lt
     token = FrpsToken.for_heartbeat(selected)
-    assert {:ok, %{"lease_id" => ^second, "profile" => "atomixos-bootstrap"}} = FrpsToken.verify(token)
+    assert {:ok, %{"lease_id" => ^second, "profile" => "device-bootstrap"}} = FrpsToken.verify(token)
     assert :ok = Devices.close_remote_access_lease(second)
     restored = Devices.get_device!(device.id)
     assert restored.remote_access_profile == "default"
@@ -109,7 +109,7 @@ defmodule Nixstasis.Devices.RemoteAccessLeasesTest do
              Devices.open_remote_access_lease(device,
                owner_kind: "provisioning",
                owner_id: Ecto.UUID.generate(),
-               profile: "atomixos-bootstrap"
+               profile: "device-bootstrap"
              )
 
     assert Repo.aggregate(Nixstasis.Devices.RemoteAccessLease, :count) == 1

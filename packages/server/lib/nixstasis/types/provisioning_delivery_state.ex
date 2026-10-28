@@ -1,6 +1,6 @@
 defmodule Nixstasis.Types.ProvisioningDeliveryState do
   @moduledoc """
-  Persisted states for an AtomixOS bootstrap delivery.
+  Persisted states for a device bootstrap delivery.
   """
 
   use Ash.Type.Enum,

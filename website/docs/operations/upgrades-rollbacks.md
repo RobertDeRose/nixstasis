@@ -58,6 +58,10 @@ When you roll out a new client:
 - check that `frpc` is still at `/usr/libexec/nixstasis/frpc`;
 - check that the device can still register or keeps polling.
 
+If a device's `/etc/nixstasis/config.yaml` customizes the `atomixos-bootstrap` route profile, rename that profile to
+`device-bootstrap` when you upgrade to a client that uses the new name. The installer keeps your config file, and a
+client that finds no `device-bootstrap` profile falls back to the built-in `127.0.0.1:8080` target.
+
 ## Rollback
 
 How you roll back depends on whether the upgrade's migrations changed the database in a way the old version cannot

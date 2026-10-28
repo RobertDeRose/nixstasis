@@ -371,10 +371,10 @@ paths:
     post:
       security:
         - operatorBearer: []
-      summary: Submit one initial AtomixOS bootstrap artifact
+      summary: Submit one initial device bootstrap artifact
       description: >-
         Uploads exactly one complete config.toml or approved config archive through
-        the authorized atomixos-bootstrap FRP route. The server opens the route
+        the authorized device-bootstrap FRP route. The server opens the route
         lease before sending the opaque bytes, polls the returned job, and never
         retries an accepted POST. Production authorization is supplied by Caddy
         forwarded operator claims; local development may use its explicit fallback.
@@ -435,7 +435,7 @@ paths:
     get:
       security:
         - operatorBearer: []
-      summary: Read an AtomixOS bootstrap delivery
+      summary: Read a device bootstrap delivery
       parameters:
         - in: path
           name: id

@@ -1,17 +1,17 @@
-# Design — AtomixOS Bootstrap Provisioning
+# Design — Device Bootstrap Provisioning
 
 ## Metadata
 
-- Feature slug: `atomixos-bootstrap-provisioning`
-- Design path: `website/docs/features/atomixos-bootstrap-provisioning/design.md`
-- Implemented record: `website/docs/features/atomixos-bootstrap-provisioning/index.md`
+- Feature slug: `device-bootstrap-provisioning`
+- Design path: `website/docs/features/device-bootstrap-provisioning/design.md`
+- Implemented record: `website/docs/features/device-bootstrap-provisioning/index.md`
 
 ## Feature Summary
 
-Deliver one complete initial AtomixOS desired-state artifact through the
-existing authorized `atomixos-bootstrap` FRP route. Nixstasis owns operator
+Deliver one complete initial desired-state artifact through the
+existing authorized `device-bootstrap` FRP route. Nixstasis owns operator
 authorization, bounded transport, durable delivery state, job polling, audit
-events, idempotency, and route-lease withdrawal. AtomixOS owns archive/TOML
+events, idempotency, and route-lease withdrawal. The device provisioning service owns archive/TOML
 validation and device mutation.
 
 ## User Intent
@@ -25,9 +25,9 @@ unknown result and withdraw temporary access.
 ## Goals
 
 - Require an approved, online device and trusted remote-access permission.
-- Select the client-owned `atomixos-bootstrap` profile and open a lease before
+- Select the client-owned `device-bootstrap` profile and open a lease before
   any upload.
-- Send exact bounded `application/octet-stream` bytes to AtomixOS `/api/config`.
+- Send exact bounded `application/octet-stream` bytes to the provisioning service's `/api/config`.
 - Poll the documented job resource with bounded timeouts and retries.
 - Persist digest, job progress, result, failure, rollback diagnostics, and
   lease state.
@@ -41,7 +41,7 @@ unknown result and withdraw temporary access.
 - Writing `/data/config` or any other device filesystem from Phoenix.
 - Unpacking, validating, signing, or mutating an artifact locally.
 - Re-applying an already provisioned device.
-- Following AtomixOS `forwarding_url` or using browser `/apply` and CSRF.
+- Following the provisioning service's `forwarding_url` or using browser `/apply` and CSRF.
 - Accepting client-supplied FRP targets, route definitions, credentials, or
   arbitrary Host-header values.
 
@@ -61,7 +61,7 @@ unknown result and withdraw temporary access.
 
 ### Functional Requirements
 
-- The AtomixOS request is `POST /api/config` with exact bytes and optional
+- The provisioning request is `POST /api/config` with exact bytes and optional
   `x-config-filename`; accepted responses provide `job_id`, `state`, and a
   relative `/api/jobs/<job_id>` URL.
 - Polling accepts `submitted`, `running`, `succeeded`, and `failed`; events,
@@ -107,11 +107,11 @@ the route-definition authority.
 
 ## Operational Considerations
 
-The default compressed/plain upload limit is 32 MiB, each AtomixOS response
+The default compressed/plain upload limit is 32 MiB, each provisioning service response
 body has a 1 MiB streaming receive budget, request timeout is 30 seconds,
 polling deadline is five minutes, and route leases use the existing one-hour
 lease default. Operators must retain the public wildcard FRP/Caddy
-route and AtomixOS API base. `ATOMIXOS_PROVISIONING_BASE_URL` is an optional
+route and provisioning API base. `NIXSTASIS_PROVISIONING_BASE_URL` is an optional
 runtime override; otherwise `BASE_DOMAIN` derives the per-device host.
 
 ## Documentation Impact
@@ -164,7 +164,7 @@ all steps share the lease and duplicate-submission boundary.
 
 - Human observation of the broader 90-second operator usability target is not
   available and remains deferred.
-- AtomixOS post-provision re-apply is intentionally outside this initial-boot
+- Post-provision re-apply is intentionally outside this initial-boot
   contract and requires a separate approved API design.
 
 ## Existing Context
@@ -188,7 +188,7 @@ Relevant paths:
 
 1. Validate authorization, device state, filename, size, digest, and attempt
    identity before creating a durable delivery record.
-2. Open a server-owned remote-access lease using `atomixos-bootstrap`, derive
+2. Open a server-owned remote-access lease using `device-bootstrap`, derive
    the per-device HTTPS FRP base, and post the opaque bytes through the route.
 3. Persist the accepted job identity and resolve only its relative job path.
 4. Poll until terminal completion or a five-minute default deadline. Record each
@@ -201,11 +201,11 @@ Relevant paths:
 
 ## State Model
 
-- `submitting`: durable record exists before AtomixOS accepts a request.
+- `submitting`: durable record exists before the provisioning service accepts a request.
 - `submitted` / `running`: an accepted job is being polled while the lease is
   active.
 - `succeeded`: initial bootstrap succeeded and access is withdrawn.
-- `failed`: AtomixOS or transport rejected the request/job and access is
+- `failed`: the provisioning service or transport rejected the request/job and access is
   withdrawn.
 - `indeterminate`: the accepted outcome cannot be proven; access remains until
   explicit withdrawal or expiry.

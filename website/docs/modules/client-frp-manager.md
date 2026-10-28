@@ -36,7 +36,7 @@ reports tunnel state back in heartbeats.
   route kind means no tunnel starts, and the error is reported in `connection_status.error` until remote access is
   withdrawn.
 - **Route rules:** route identifiers must be DNS-safe because HTTP subdomains and TCP mux domains are built from them.
-  HTTP routes may rewrite the `Host` header only to `localhost` or a loopback IP; the built-in `atomixos-bootstrap`
+  HTTP routes may rewrite the `Host` header only to `localhost` or a loopback IP; the built-in `device-bootstrap`
   profile sends `localhost` to `127.0.0.1:8080`. Profile version 1 covers today's routes; new route semantics
   need a new version.
 - The server side of FRP authorization is described in [Gateway FRP](gateway-frp.md).

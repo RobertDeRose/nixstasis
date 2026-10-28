@@ -199,7 +199,7 @@ defmodule Nixstasis.ProvisioningTest do
              )
 
     assert delivery.state == :failed
-    assert delivery.error =~ "AtomixOS job was not found"
+    assert delivery.error =~ "provisioning job was not found"
     assert delivery.error =~ "receive limit"
     assert delivery.lease_withdrawn_at
   end
@@ -462,7 +462,7 @@ defmodule Nixstasis.ProvisioningTest do
 
     bootstrap = Nixstasis.Devices.RemoteAccess.for_owner("provisioning", delivery.id)
     {:ok, selected, browser_id} = Devices.open_remote_access_lease(Devices.get_device!(device.id), profile: "default")
-    assert selected.remote_access_profile == "atomixos-bootstrap"
+    assert selected.remote_access_profile == "device-bootstrap"
     assert Nixstasis.Devices.RemoteAccess.selected(device.id).id == bootstrap.id
     assert Devices.remote_access_lease_active?(browser_id)
     Provisioning.withdraw_delivery(operator_session(device), delivery.id)
@@ -590,7 +590,7 @@ defmodule Nixstasis.ProvisioningTest do
         owner_id: delivery.id,
         owner: Process.whereis(Provisioning),
         audit_owner: delivery.actor_id,
-        profile: "atomixos-bootstrap",
+        profile: "device-bootstrap",
         ttl_ms: 60_000
       )
 

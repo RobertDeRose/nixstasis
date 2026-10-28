@@ -136,7 +136,7 @@ targeting the compose `postgres` host.
 | `NIXSTASIS_E2E_RUNNER_TOKEN`       | tracked local-only value             | fresh 32+ byte random secret   |
 | `NIXSTASIS_SIMULATOR_HTTP_ENABLED` | `true`                               | `false`                        |
 | `NIXSTASIS_SSH_FRP_HOST`           | `frps`                               | reachable FRPS TCP mux host    |
-| `ATOMIXOS_PROVISIONING_BASE_URL`   | derived from device host             | optional explicit FRP API base |
+| `NIXSTASIS_PROVISIONING_BASE_URL`  | derived from device host             | optional explicit FRP API base |
 | `*_IMAGE_REF`                      | Local tags (`*:dev`)                 | Digest-pinned GHCR refs        |
 
 ## Runtime Contract
@@ -179,13 +179,13 @@ targeting the compose `postgres` host.
 - `NIXSTASIS_SSH_FRP_HOST` is the hostname Phoenix uses for browser terminal SSH
   connections to FRPS TCP mux. In Compose it should stay `frps`; outside Compose
   it must be the FRPS TCP mux host reachable from the Phoenix runtime.
-- `ATOMIXOS_PROVISIONING_BASE_URL` optionally overrides the per-device public
-  FRP API base used by the server's initial AtomixOS bootstrap action. When it
+- `NIXSTASIS_PROVISIONING_BASE_URL` optionally overrides the per-device public
+  FRP API base used by the server's initial device bootstrap action. When it
   is unset, the server derives
   `https://atom-<compact-device-uuid>-provisioning.<BASE_DOMAIN>`, using the
   server-assigned device UUID in lowercase without hyphens, not the MAC address.
   This hostname must resolve to Caddy and be eligible for TLS approval.
-  The action still requires the authorized `atomixos-bootstrap` route and
+  The action still requires the authorized `device-bootstrap` route and
   resolves only the documented relative `/api/jobs/<job_id>` path.
 - The client poll service and root-owned SSH helper use the fixed local socket
   `/run/nixstasis/ssh-authority.sock`; custom socket paths are unsupported.

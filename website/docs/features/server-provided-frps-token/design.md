@@ -137,7 +137,7 @@ not claim instantaneous teardown of established FRPS connections.
 - `website/docs/modules/client-transport.md`
 - `website/docs/modules/gateway-frp.md`
 - `website/docs/reference/openapi/device-api.yaml`
-- `website/docs/features/atomixos-bootstrap-provisioning/design.md`
+- `website/docs/features/device-bootstrap-provisioning/design.md`
 - Both affected feature delivery records
 
 ## Validation

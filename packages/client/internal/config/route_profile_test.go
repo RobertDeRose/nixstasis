@@ -28,17 +28,17 @@ func TestResolveRouteProfileDefaultsWhenServerSendsOnlyAToken(t *testing.T) {
 	}
 }
 
-func TestResolveRouteProfileProvidesAtomixOSBootstrapHostRewrite(t *testing.T) {
+func TestResolveRouteProfileProvidesDeviceBootstrapHostRewrite(t *testing.T) {
 	cfg := FRPConfig{}
 
 	profile, selection, err := ResolveRouteProfile(cfg, &RouteProfileSelection{
-		Name:    AtomixOSBootstrapProfileName,
+		Name:    DeviceBootstrapProfileName,
 		Version: DefaultFRPProfileVersion,
 	})
 	if err != nil {
 		t.Fatalf("ResolveRouteProfile() error = %v", err)
 	}
-	if selection.Name != AtomixOSBootstrapProfileName || selection.Version != DefaultFRPProfileVersion {
+	if selection.Name != DeviceBootstrapProfileName || selection.Version != DefaultFRPProfileVersion {
 		t.Fatalf("selection = %+v", selection)
 	}
 	if len(profile.Routes) != 1 {

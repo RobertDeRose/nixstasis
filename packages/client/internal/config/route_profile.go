@@ -12,9 +12,9 @@ import (
 
 // Built-in profile names and route kinds supported by the client renderer.
 const (
-	DefaultFRPProfileName        = "default"
-	DefaultFRPProfileVersion     = 1
-	AtomixOSBootstrapProfileName = "atomixos-bootstrap"
+	DefaultFRPProfileName      = "default"
+	DefaultFRPProfileVersion   = 1
+	DeviceBootstrapProfileName = "device-bootstrap"
 
 	RouteKindHTTP2HTTPS = "http2https"
 	RouteKindHTTP       = "http"
@@ -65,8 +65,8 @@ func NormalizeFRPConfig(cfg *FRPConfig) {
 	if _, exists := cfg.Profiles[DefaultFRPProfileName]; !exists {
 		cfg.Profiles[DefaultFRPProfileName] = defaultFRPRouteProfile(*cfg)
 	}
-	if _, exists := cfg.Profiles[AtomixOSBootstrapProfileName]; !exists {
-		cfg.Profiles[AtomixOSBootstrapProfileName] = atomixOSBootstrapRouteProfile()
+	if _, exists := cfg.Profiles[DeviceBootstrapProfileName]; !exists {
+		cfg.Profiles[DeviceBootstrapProfileName] = deviceBootstrapRouteProfile()
 	}
 }
 
@@ -109,7 +109,7 @@ func ResolveRouteProfile(cfg FRPConfig, selection *RouteProfileSelection) (FRPRo
 	return profile, resolvedSelection, nil
 }
 
-func atomixOSBootstrapRouteProfile() FRPRouteProfile {
+func deviceBootstrapRouteProfile() FRPRouteProfile {
 	hostHeaderRewrite := "localhost"
 
 	return FRPRouteProfile{

@@ -82,7 +82,7 @@ if config_env() == :prod do
       %{}
     end
 
-  provisioning_base_url = Deployment.optional_env("ATOMIXOS_PROVISIONING_BASE_URL")
+  provisioning_base_url = Deployment.optional_env("NIXSTASIS_PROVISIONING_BASE_URL")
   ssh_client_frp_host = Deployment.optional_env("NIXSTASIS_SSH_FRP_HOST", "frps")
   ssh_client_frp_port = Deployment.optional_env("FRPS_TCPMUX_PORT", "2022")
 

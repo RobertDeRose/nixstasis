@@ -6,7 +6,7 @@ in [E2E API](development/e2e/api.md). The exact schemas are in the
 [OpenAPI Contracts](reference/openapi/index.md), and how the pieces fit together is in the
 [Architecture Overview](architecture.md).
 
-## AtomixOS Bootstrap Provisioning
+## Device Bootstrap Provisioning
 
 Operators upload an initial-boot artifact with `POST /api/v1/provisioning/devices/:device_id` as
 `application/octet-stream`, then read or withdraw the delivery under `/api/v1/provisioning/deliveries/:id`. The
@@ -369,7 +369,7 @@ without a profile, and reports it in `connection_status.error`.
 Version 1 covers today's route kinds and loopback targets. A new route kind or target has to be added to the client's
 typed profile definitions, and reviewed, before it can be used, and any change to what a route means needs a new
 profile version. The server only ever sends a name and a version, never route definitions, plugin options, headers, or
-targets. For example, the `Host: localhost` rewrite used by the `atomixos-bootstrap` route comes from the client's own
+targets. For example, the `Host: localhost` rewrite used by the `device-bootstrap` route comes from the client's own
 profile, not from the heartbeat.
 
 Command delivery response:

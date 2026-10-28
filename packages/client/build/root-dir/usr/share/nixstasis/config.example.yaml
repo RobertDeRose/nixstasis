@@ -36,7 +36,7 @@ frp:
         - name: "pcp"
           kind: "tcpmux"
           local_port: 44321
-    atomixos-bootstrap:
+    device-bootstrap:
       version: 1
       routes:
         - name: "provisioning"

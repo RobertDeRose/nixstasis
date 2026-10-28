@@ -216,11 +216,12 @@
       <div class="ability">
         <p class="ability__verb"><svg class="glyph" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><polygon class="hex hex--ok" points="10.0,1.5 17.4,5.8 17.4,14.2 10.0,18.5 2.6,14.2 2.6,5.7"/></svg>Provision</p>
         <div>
-          <h2>Give a new device its first configuration.</h2>
-          <p>Upload one config file and the server hands it to the device's provisioning service over its own tunnel,
-            follows the job, and closes the route when it's done.
-            <a href="https://github.com/RobertDeRose/atomixos">AtomixOS</a> ships that service, which makes it the
-            ideal OS for a Nixstasis fleet.</p>
+          <h2>Provision AtomixOS devices remotely.</h2>
+          <p>Nixstasis supports remote provisioning for <a href="https://github.com/RobertDeRose/atomixos">AtomixOS</a>:
+            upload a first-boot config and the server delivers it over the device's own tunnel, follows the job, and
+            closes the route when it's done. Other operating systems can add support by implementing the same
+            provisioning API. Turn on Nixstasis in an AtomixOS build configuration and every image ships with the
+            nixstasis client, making it an ideal OS for your Nixstasis fleet.</p>
         </div>
       </div>
     </section>
@@ -246,9 +247,7 @@
     <section class="start" id="start" aria-labelledby="start-title">
       <h2 id="start-title">From clone to first device</h2>
       <p class="start__intro">You need a host with Docker for the server, and Linux devices on amd64 or arm64 with
-        systemd, or Nix. For the smoothest start, run
-        <a href="https://github.com/RobertDeRose/atomixos">AtomixOS</a> on your devices: it supports device bootstrap
-        provisioning out of the box.</p>
+        systemd, or Nix.</p>
       <ol class="steps">
         <li>
           <h3>Run the server</h3>

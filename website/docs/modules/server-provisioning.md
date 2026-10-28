@@ -3,8 +3,8 @@
 `Nixstasis.Provisioning` gives a freshly installed device its first configuration. An operator uploads one
 artifact, and the server passes those exact bytes to the device's provisioning service over the device's `device-bootstrap` FRP route. The
 server never writes to the device's filesystem or unpacks the artifact; the provisioning service does all of that itself.
-[AtomixOS](https://github.com/RobertDeRose/atomixos) ships a compatible provisioning service and is the recommended OS
-for Nixstasis devices.
+Nixstasis supports remote provisioning for [AtomixOS](https://github.com/RobertDeRose/atomixos); other operating
+systems can add support by implementing the same provisioning API.
 
 ## Owns
 

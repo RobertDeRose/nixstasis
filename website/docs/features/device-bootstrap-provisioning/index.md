@@ -7,11 +7,15 @@ file unchanged to the provisioning service's `/api/config`, follows the resultin
 The server never writes to the device's filesystem, unpacks archives, uses the browser-only `/apply` flow, or resends an
 upload that the provisioning service has accepted. The original plan is in the [design record](design.md).
 
-## Works best with AtomixOS
+## Supported operating systems
 
-[AtomixOS](https://github.com/RobertDeRose/atomixos) ships the provisioning service this feature talks to, so an
-AtomixOS device supports bootstrap provisioning as soon as it is installed. That makes it the ideal OS for a Nixstasis
-fleet. Any other OS works too if it serves the same `/api/config` and job API on the device's `device-bootstrap` route.
+Nixstasis supports remote provisioning for [AtomixOS](https://github.com/RobertDeRose/atomixos), whose provisioning
+service accepts the first-boot config. Other operating systems can add support by implementing the same API on the
+device's `device-bootstrap` route: `HEAD /api/config` answering 2xx or 405 once the route is ready, `POST /api/config`,
+and its job resource. [How an upload runs](../../modules/server-provisioning.md#how-an-upload-runs) gives the full
+sequence.
+
+This feature is optional. Enrollment, monitoring, and remote access work on any Linux device running the agent.
 
 ## What changed for users
 

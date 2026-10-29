@@ -5,6 +5,17 @@
     "@commitlint/cli": "20.5.3"
   },
   "commitlint": {
+    "parserPreset": {
+      "parserOpts": {
+        "headerPattern": "^(\\w*)(?:\\((.*)\\))?!?: (.*)$",
+        "breakingHeaderPattern": "^(\\w*)(?:\\((.*)\\))?!: (.*)$",
+        "headerCorrespondence": [
+          "type",
+          "scope",
+          "subject"
+        ]
+      }
+    },
     "rules": {
       "body-leading-blank": [
         2,
